@@ -59,7 +59,7 @@ function App() {
     <div className="min-h-screen bg-gray-100 p-4">
       <h1 className="text-center text-4xl font-bold text-gray-800">Lista de Tareas</h1>
       <ToDoForm onAdd={addToDo}/>
-      <div className="max-w-md mx-auto mt-6">-
+      <div className="max-w-3/4 mx-auto mt-6">-
         <ToDoList todos={todos} onDelete={deleteToDo} onToggle={toggleToDo} />
       </div> 
     </div>

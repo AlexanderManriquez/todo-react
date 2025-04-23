@@ -18,6 +18,14 @@ export default function ToDoForm({ onAdd }: Props) {
     setFormData({ ...formData, [name]: value });
   };
 
+  const getTodayDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const { title, description, date } = formData;
@@ -26,6 +34,34 @@ export default function ToDoForm({ onAdd }: Props) {
       setError("Todos los campos son obligatorios.");
       return;
     }
+
+    const selectedDateTime = new Date(`${date}T${formData.hour}`);
+    const now = new Date();
+    {console.log("Selected Date and Time:", selectedDateTime)}
+    {console.log("Current Date and Time:", now)}
+    
+
+    //FAlta validación que hora de la tarea no sea menor a hora actual...
+    
+    // const selectedDate = new Date(date);
+    // const isSameDay = 
+    //   selectedDate.getFullYear() === now.getFullYear() &&
+    //   selectedDate.getMonth() === now.getMonth() &&
+    //   selectedDate.getDate() === now.getDate();
+
+    // if(isSameDay) {
+    //   const [selectedHours, selectedMinutes] = formData.hour.split(":").map(Number);
+    //   const currentHours = now.getHours();
+    //   const currentMinutes = now.getMinutes();
+
+    //   if (
+    //     selectedHours < currentHours ||
+    //     (selectedHours === currentHours && selectedMinutes <= currentMinutes)
+    //   ) {
+    //     setError("La hora seleccionada debe ser futura.");
+    //     return;
+    //   }
+    // }
 
     onAdd(formData);
     setFormData({ title: "", description: "", date: "", hour: "" });
@@ -60,6 +96,7 @@ export default function ToDoForm({ onAdd }: Props) {
       <input
         type="date"
         name="date"
+        min={getTodayDate()}
         value={formData.date}
         onChange={handleChange}
         className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
