@@ -13,10 +13,14 @@ export default function ToDoList({ todos, onDelete, onToggle }: Props) {
     }
 
     return (
-        <div className='flex flex-col gap-4'>
-            {todos.map((todo) => (
+        <div className='flex flex-wrap gap-4'>
+            
+            {todos.map((todo) => {
+                console.log(todo)
+                return (
                 <ToDoItem key={todo.id} todo={todo} onDelete={onDelete} onToggle={onToggle} />
-            ))}
+            );
+            })}
         </div>
     )
 }

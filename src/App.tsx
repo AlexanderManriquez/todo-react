@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ToDoForm from "./components/ToDoForm"
 import ToDoList from "./components/ToDoList";
 import { ToDo } from "./types";
@@ -6,6 +6,29 @@ import { ToDo } from "./types";
 
 function App() {
   const [todos, setTodos] = useState<ToDo[]>([]);
+  const [initialized, setInitialized] = useState(false);
+
+  useEffect(() => {
+    const storedTodos = localStorage.getItem("todos");
+    if (storedTodos) {
+      try {
+        const parsedTodos: ToDo[] = JSON.parse(storedTodos);
+        console.log("Cargando tareas desde localStorage:", parsedTodos);
+        setTodos(parsedTodos);
+      } catch (error) {
+        console.error("Error al obtener los datos desde localStorage:", error);
+        localStorage.removeItem("todos");
+      }
+    }
+    setInitialized(true);
+  }, []);
+
+  useEffect(() => {
+    if (initialized) {
+      console.log("Guardando todos en localStorage:", todos);
+      localStorage.setItem("todos", JSON.stringify(todos));
+    }   
+  }, [todos, initialized]);
 
   const addToDo = (todo: { title: string; description: string; date: string; hour: string }) => {
     const newTodo = {
