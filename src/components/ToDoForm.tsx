@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 interface Props {
   onAdd: (todo: { title: string; description: string; date: string; hour: string, }) => void;
@@ -31,37 +32,29 @@ export default function ToDoForm({ onAdd }: Props) {
     const { title, description, date } = formData;
 
     if (!title.trim() || !description.trim() || !date || !formData.hour) {
-      setError("Todos los campos son obligatorios.");
+      Swal.fire({
+        icon:"error",
+        title: 'Oops...',
+        text:'Debes completar todos los campos del formulario'
+      })
       return;
     }
 
     const selectedDateTime = new Date(`${date}T${formData.hour}`);
     const now = new Date();
-    {console.log("Selected Date and Time:", selectedDateTime)}
-    {console.log("Current Date and Time:", now)}
     
+    if (selectedDateTime <= now) {
+      Swal.fire({
+        icon:"error",
+        title: 'Oops...',
+        text:'La hora seleccionada debe ser futura'
+      })
+      return;
+    }
 
     //FAlta validación que hora de la tarea no sea menor a hora actual...
-    
-    // const selectedDate = new Date(date);
-    // const isSameDay = 
-    //   selectedDate.getFullYear() === now.getFullYear() &&
-    //   selectedDate.getMonth() === now.getMonth() &&
-    //   selectedDate.getDate() === now.getDate();
 
-    // if(isSameDay) {
-    //   const [selectedHours, selectedMinutes] = formData.hour.split(":").map(Number);
-    //   const currentHours = now.getHours();
-    //   const currentMinutes = now.getMinutes();
 
-    //   if (
-    //     selectedHours < currentHours ||
-    //     (selectedHours === currentHours && selectedMinutes <= currentMinutes)
-    //   ) {
-    //     setError("La hora seleccionada debe ser futura.");
-    //     return;
-    //   }
-    // }
 
     onAdd(formData);
     setFormData({ title: "", description: "", date: "", hour: "" });
