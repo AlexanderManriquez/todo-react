@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 interface Props {
-  onAdd: (todo: { title: string; description: string; date: string }) => void;
+  onAdd: (todo: { title: string; description: string; date: string; hour: string, }) => void;
 }
 
 export default function ToDoForm({ onAdd }: Props) {
@@ -9,6 +9,7 @@ export default function ToDoForm({ onAdd }: Props) {
     title: "",
     description: "",
     date: "",
+    hour: "",
   });
   const [error, setError] = useState("");
 
@@ -21,13 +22,13 @@ export default function ToDoForm({ onAdd }: Props) {
     e.preventDefault();
     const { title, description, date } = formData;
 
-    if (!title.trim() || !description.trim() || !date) {
+    if (!title.trim() || !description.trim() || !date || !formData.hour) {
       setError("Todos los campos son obligatorios.");
       return;
     }
 
     onAdd(formData);
-    setFormData({ title: "", description: "", date: "" });
+    setFormData({ title: "", description: "", date: "", hour: "" });
     setError("");
   };
 
@@ -63,6 +64,14 @@ export default function ToDoForm({ onAdd }: Props) {
         onChange={handleChange}
         className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         aria-label="Fecha de la tarea"
+      />
+      <input
+        type="time"
+        name="hour"
+        value={formData.hour}
+        onChange={handleChange}
+        className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        aria-label="Hora de la tarea"
       />
       <button
         type="submit"

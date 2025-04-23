@@ -7,12 +7,13 @@ import { ToDo } from "./types";
 function App() {
   const [todos, setTodos] = useState<ToDo[]>([]);
 
-  const addToDo = (todo: { title: string; description: string; date: string }) => {
+  const addToDo = (todo: { title: string; description: string; date: string; hour: string }) => {
     const newTodo = {
       id: Date.now(),
       title: todo.title,
       description: todo.description,
       date: todo.date,
+      hour: todo.hour,
       completed: false,
     };
     setTodos((prev) => [...prev, newTodo]);

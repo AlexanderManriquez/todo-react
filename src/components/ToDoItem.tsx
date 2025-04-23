@@ -14,11 +14,13 @@ export default function ToDoItem({ todo, onDelete, onToggle}: Props) {
           <h3 className={`text-lg font-semibold ${todo.completed ? 'line-through text-gray-400' : ''}`}>
             {todo.title}
           </h3>
-          <p className={`text-lg font-semibold ${todo.completed ? 'line-through text-gray-400' : ''}`}>
+          <p className={`text-base font-light ${todo.completed ? 'line-through text-gray-400' : ''}`}>
             {todo.description}
           </p>
 
           <div className="text-sm text-gray-500">Fecha: {todo.date}</div>
+
+          <div className="text-sm text-gray-500">Hora: {todo.hour}</div>
 
           <div className="flex gap-2 mt-2">
             <button
