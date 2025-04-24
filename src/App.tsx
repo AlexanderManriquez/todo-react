@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import ToDoForm from "./components/ToDoForm"
 import ToDoList from "./components/ToDoList";
 import { ToDo } from "./types";
+import useDarkMode from "./hooks/useDarkMode";
+import { Moon, Sun } from "lucide-react";
 
 
 function App() {
   const [todos, setTodos] = useState<ToDo[]>([]);
   const [initialized, setInitialized] = useState(false);
+  const [darkMode, setDarkMode] = useDarkMode();
 
   useEffect(() => {
     const storedTodos = localStorage.getItem("todos");
@@ -56,8 +59,16 @@ function App() {
       
   return (
     <>
-    <div className="min-h-screen bg-gray-100 p-4">
-      <h1 className="text-center text-4xl font-bold text-gray-800">Lista de Tareas</h1>
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
+      <button
+        onClick={() => setDarkMode(!darkMode)}
+        className="fixed top-4 right-4 bg-gray-200 dark:bg-gray-800 p-2 rounded-full shadow-md transition duration-300"
+        aria-label="Cambiar tema"
+      >
+        {darkMode ? <Sun className='text-yellow-400' /> : <Moon className='text-blue-600' />}
+      </button>
+
+      <h1 className="text-center text-4xl font-bold text-gray-800 dark:text-gray-200">Lista de Tareas</h1>
       <ToDoForm onAdd={addToDo}/>
       <div className="max-w-3/4 mx-auto mt-6">-
         <ToDoList todos={todos} onDelete={deleteToDo} onToggle={toggleToDo} />
