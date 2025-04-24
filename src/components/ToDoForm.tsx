@@ -60,7 +60,7 @@ export default function ToDoForm({ onAdd }: Props) {
   return (
     <form 
       onSubmit={handleSubmit} 
-      className="flex flex-col gap-4 my-6 max-w-md mx-auto bg-white dark:bg-gray-800 dark:text-gray-200 dark:border-gray-100 p-6 rounded-lg shadow-md"
+      className="flex flex-col gap-4 my-6 max-w-md mx-auto transition-colors duration-300 ease-in-out bg-white dark:bg-gray-800 dark:text-gray-200 dark:border-gray-100 p-6 rounded-lg shadow-md"
     >
 
       {error && <p className="text-red-500 text-sm">{error}</p>}

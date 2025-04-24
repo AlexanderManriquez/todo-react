@@ -59,7 +59,7 @@ function App() {
       
   return (
     <>
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
+    <div className="min-h-screen transition-colors duration-500 ease-in-out bg-gray-100 dark:bg-gray-900 p-4">
       <button
         onClick={() => setDarkMode(!darkMode)}
         className="fixed top-4 right-4 bg-gray-200 dark:bg-gray-800 p-2 rounded-full shadow-md transition duration-300"

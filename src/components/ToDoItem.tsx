@@ -8,7 +8,7 @@ interface Props {
 
 export default function ToDoItem({ todo, onDelete, onToggle}: Props) {
     return (
-        <div className={`p-4 rounded-md shadow flex flex-col gap-2 bg-gray-50 dark:bg-gray-700 dark:text-white border-1 ${
+        <div className={`p-4 rounded-md shadow flex flex-col gap-2 transition-colors duration-300 ease-in bg-gray-50 dark:bg-gray-700 dark:text-white border-1 ${
             todo.completed ? 'border-green-500' : 'border-red-500'
         }`}>
           <h3 className={`text-lg font-semibold ${todo.completed ? 'line-through text-gray-400' : ''}`}>
