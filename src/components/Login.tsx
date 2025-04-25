@@ -3,7 +3,11 @@ import { auth } from "../firebase/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Swal from "sweetalert2";
 
-export default function Login() {
+type Props = {
+  onSuccess: () => void;
+}
+
+export default function Login({ onSuccess } : Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -12,13 +16,18 @@ export default function Login() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       Swal.fire({
-        icon: "error",
+        icon: "success",
         title: "¡Éxito!",
         text: "Sesión Iniciada Correctamente",
       });
+      onSuccess();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      alert("Error al iniciar sesión: " + error.message);
+      Swal.fire({
+        icon: "error",
+        title: "¡Alto ahí!",
+        text: `${error.message}`,
+      });
     }
   };
 

@@ -3,7 +3,11 @@ import { useState } from "react";
 import Swal from "sweetalert2";
 import { auth } from "../firebase/firebase";
 
-export default function Register() {
+type Props = {
+  onSuccess: () => void;
+}
+
+export default function Register({ onSuccess } : Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -12,10 +16,11 @@ export default function Register() {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       Swal.fire({
-        icon: "error",
+        icon: "success",
         title: "¡Éxito!",
         text: "Usuario registrado correctamente",
       });
+      onSuccess();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       alert(error.message);
