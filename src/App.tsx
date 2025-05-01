@@ -42,7 +42,7 @@ function App() {
         <BrowserRouter>
           <Navbar user={user ?? null} />
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home user={user ?? null}/>} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route element={<PrivateRoute />}>

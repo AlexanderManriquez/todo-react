@@ -1,100 +1,93 @@
-import { useEffect, useState } from "react";
-import { getUserTodos } from "../services/toDoService";
+import { useEffect, useState, useCallback } from "react";
+import { addUserTodo, deleteUserTodo, getUserTodos, updateUserTodo } from "../services/toDoService";
 import { ToDo } from "../types";
+import ToDoForm from "../components/ToDoForm";
+import ToDoList from "../components/ToDoList";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ToDoPage = ({ user }: any) => {
   const [todos, setTodos] = useState<ToDo[]>([]);
-  const [newToDo, setNewToDo] = useState("");
 
-
-  const loadTodos = async () => {
+  const loadTodos = useCallback(async () => {
     if (user) {
+      localStorage.removeItem("todos");
+
       const firebaseTodos = await getUserTodos(user.uid);
-      setTodos(firebaseTodos);
+
+      if (firebaseTodos && firebaseTodos.length > 0) {
+        setTodos(firebaseTodos);
+      } else {
+        setTodos([]);
+      }
     } else {
       const storedTodos = localStorage.getItem("todos");
       if (storedTodos) {
         setTodos(JSON.parse(storedTodos));
+      } else {
+        setTodos([]);
       }
     }
-  };
+  }, [user]);
 
   useEffect(() => {
     loadTodos();
-  }, [user]);
+  }, [user, loadTodos]);
 
-  const addToDo = () => {
-    const newToDoItem: ToDo = { 
-      id: Date.now(), 
-      title: newToDo, 
-      completed: false, 
-      description: "", 
-      date: new Date().toISOString().split("T")[0], 
-      hour: new Date().toLocaleTimeString() 
+  const addToDo = async (todo: { title: string; description: string; date: string; hour: string }) => {
+    const newToDoItem: ToDo = {
+      id: Date.now(),
+      title: todo.title,
+      completed: false,
+      description: todo.description,
+      date: todo.date,
+      hour: todo.hour,
     };
     const updatedTodos = [...todos, newToDoItem];
     setTodos(updatedTodos);
-    localStorage.setItem("todos", JSON.stringify(updatedTodos));
-    setNewToDo("");
+
+    if (user) {
+      // Corregido: Pasar solo el nuevo ToDo a addUserTodo
+      await addUserTodo(user.uid, newToDoItem);
+    } else {
+      localStorage.setItem("todos", JSON.stringify(updatedTodos));
+    }
   };
 
-  const deleteToDo = (id: number) => {
+  const deleteToDo = async (id: number) => {
     const updatedTodos = todos.filter((todo) => todo.id !== id);
     setTodos(updatedTodos);
-    localStorage.setItem("todos", JSON.stringify(updatedTodos));
+
+    if (user) {
+      await deleteUserTodo(user.uid, id);
+    } else {
+      localStorage.setItem("todos", JSON.stringify(updatedTodos));
+    }
   };
 
-  const toggleToDo = (id: number) => {
+  const toggleToDo = async (id: number) => {
     const updatedTodos = todos.map((todo) =>
       todo.id === id ? { ...todo, completed: !todo.completed } : todo
     );
     setTodos(updatedTodos);
-    localStorage.setItem("todos", JSON.stringify(updatedTodos));
+
+    if (user) {
+      const toggledTodo = updatedTodos.find((todo) => todo.id === id);
+      if (toggledTodo) {
+        await updateUserTodo(user.uid, id, { completed: toggledTodo.completed });
+      }
+    } else {
+      localStorage.setItem("todos", JSON.stringify(updatedTodos));
+    }
   };
 
   return (
     <div className="text-center mt-10">
       <h2 className="text-2xl font-bold mb-4">Mis Tareas</h2>
-      <div className="mt-6">
-        <input
-          type="text"
-          value={newToDo}
-          onChange={(e) => setNewToDo(e.target.value)}
-          placeholder="Nueva Tarea"
-          className="p-2 rounded border border-gray-300"
-        />
-        <button
-          onClick={addToDo}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 shadow-md transition duration-300 ml-2"
-        >
-          Agregar Tarea
-        </button>
-      </div>
+
+      <ToDoForm onAdd={addToDo} />
+
       <div className="mt-4">
-        <ul>
-          {todos.map((todo) => (
-            <li
-              key={todo.id}
-              className="flex justify-between items-center p-2 border-b border-gray-300"
-            >
-              <span
-                className={`flex-1 ${
-                  todo.completed ? "line-through text-gray-500" : ""
-                }`}
-                onClick={() => toggleToDo(todo.id)}
-              >
-                {todo.title}
-              </span>
-              <button
-                onClick={() => deleteToDo(todo.id)}
-                className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700 shadow-md transition duration-300"
-              >
-                Eliminar
-              </button>
-            </li>
-          ))}
-        </ul>
+        <ToDoList todos={todos} onDelete={deleteToDo} onToggle={toggleToDo} />
       </div>
     </div>
   );

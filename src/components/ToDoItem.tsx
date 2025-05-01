@@ -8,6 +8,7 @@ interface Props {
 
 export default function ToDoItem({ todo, onDelete, onToggle}: Props) {
     return (
+      // ToDo: Estilizar las cards, estandarizar tamaño
         <div className={`p-4 rounded-md shadow flex flex-col gap-2 transition-colors duration-300 ease-in bg-gray-50 dark:bg-gray-700 dark:text-white border-1 ${
             todo.completed ? 'border-green-500' : 'border-red-500'
         }`}>

@@ -13,6 +13,7 @@ export default function ToDoList({ todos, onDelete, onToggle }: Props) {
     }
 
     return (
+        //Estilizar como se muestra la lista de tareas
         <div className='flex flex-wrap gap-4'>
             
             {todos.map((todo) => {
